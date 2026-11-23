@@ -1,0 +1,57 @@
+HOW TO RUN: Airline Loyalty Programme — Member Value, Churn and Points
+Tools: PostgreSQL, pgAdmin 4 (Windows). Time: about 45 to 60 minutes.
+
+1. WHAT YOU NEED
+- PostgreSQL installed and running. pgAdmin 4 connected to the server.
+- The three CSV files from the Airline Loyalty Program dataset, renamed as in section 2.
+
+2. DATA FILES (place in the data/ folder of this project)
+The three source CSV files are included in `data/`. For PostgreSQL bulk loading, copy them to `C:/airline_loyalty_raw/` using the exact filenames below:
+
+   Original file name                 Name to use                       Expected rows
+   Customer Loyalty History.csv       customer_loyalty_history.csv      16,737
+   Customer Flight Activity.csv       customer_flight_activity.csv       392,936
+   Calendar.csv                       calendar.csv                      2,557
+
+The load script reads the files from C:\airline_loyalty_raw\. Copy the three renamed files from data\ into that folder. Create the folder first if it does not exist. If you prefer another folder, edit the paths in script\01_load\01_load_raw.sql.
+
+3. CREATE THE DATABASE
+In pgAdmin: right-click Databases > Create > Database. Name: airline_loyalty. Owner: postgres. Save.
+
+4. RUN THE SCRIPTS IN THIS ORDER
+Open each file in the Query Tool (File > Open), then press F5.
+
+   Step  File                                                  What you should see
+   1     script\00_setup\01_create_schemas.sql                 Schemas raw and analytics
+   2     script\00_setup\02_create_raw_tables.sql              Three raw tables
+   3     script\01_load\01_load_raw.sql                        Row counts as in section 2
+   4     script\02_validation\01_row_counts.sql                Every status PASS
+   5     script\02_validation\02_keys_and_duplicates.sql       Key counts 0; exact duplicates 1,922; conflicting extra rows 1,949
+   6     script\02_validation\03_keys_and_orphans.sql          Orphan count 0
+   7     script\02_validation\04_business_rules.sql            Rule counts 0 where marked
+   8     script\03_views\01_flight_activity_clean.sql          View created
+   9     script\03_views\02_member.sql                         View created
+   10    script\04_analysis\q1_flight_activity_by_tier.sql     Matches results\q1_flight_by_tier.csv
+   11    script\04_analysis\q2_churn_rates.sql                 Matches results\q2_churn_*.csv
+   12    script\04_analysis\q3_clv_drivers.sql                 Matches results\q3_clv_*.csv
+   13    script\04_analysis\q4_points_redemption.sql           Matches results\q4_points.csv
+   14    script\04_analysis\q5_activity_before_cancellation.sql  Matches results\q5_pre_cancel.csv and results\q5_baseline.csv
+   15    script\04_analysis\q6_promotion_vs_standard.sql       Matches results\q6_promotion_a.csv and q6_promotion_b.csv
+   16    script\04_analysis\q7_value_concentration.sql         Matches results\q7_concentration.csv
+
+Views (step 8 and 9) must be created before the analysis files.
+
+5. Q5 BASELINE (CORRECTED)
+Part B of q5_activity_before_cancellation.sql is the baseline for members who did not cancel in the window. An earlier version excluded active members and returned zero rows. The corrected query returns 288,990 member-months and an average of 1.64 flights, saved as results\q5_baseline.csv.
+
+6. OPTIONAL: PYTHON CROSS-CHECK
+Install pandas (pip install pandas), then run from the project folder:
+   python script\02_validation\python_reference_check.py
+It prints the reference values to the console. Compare them with the results in results\.
+
+7. COMPARE
+Counts should match exactly. Money and points may differ by rounding. Whole-number fields in SQL may show two decimals in the Python output; these are equal.
+
+8. TROUBLESHOOTING
+- "permission denied" on load: use pgAdmin's Import/Export Data wizard for each table: Import, CSV, Header on, Delimiter comma, Null string empty.
+- Points show in scientific notation: widen the column in pgAdmin, or export to CSV.
