@@ -72,6 +72,7 @@ These are proposed management targets, not proven results.
 - **PostgreSQL and pgAdmin:** schemas, raw tables, views and seven analysis queries.
 - **SQL techniques:** joins, CTEs, window functions (`NTILE`, `PERCENTILE_CONT`), conditional aggregation and reusable views.
 - **Independent check:** a pandas calculation of the same definitions (`script/02_validation/`).
+- **Execution guide:** [SQL script order and purpose](script/README.md).
 
 **Data model:** loyalty history (one row per member) relates to flight activity (one row per member per month). Two views build the analysis tables:
 - `v_flight_activity_clean` removes exact duplicates, quarantines conflicting rows and flags whether each month is inside the member's membership.
@@ -95,7 +96,7 @@ These are proposed management targets, not proven results.
 ## Repository Structure
 
 ```text
-airline-loyalty-program-sql/
+airline-loyalty-program-eda-sql/
 ├── README.md
 ├── data/                              Three source CSV files used by the analysis
 ├── documentation/
@@ -110,20 +111,22 @@ airline-loyalty-program-sql/
     ├── 01_load/                       Load the three CSV files
     ├── 02_validation/                 Duplicates, keys, orphans, business rules, and a Python cross-check
     ├── 03_views/                      Clean flight view (with membership flag) and member view
+    ├── README.md                      Project overview and results index
+    ├── README.md                      Script execution order and file guide
     └── 04_analysis/                   One file per business question (Q1 to Q7)
 ```
 
 ## Analysis
 
-| Business question | SQL file | Result file |
+| Business question | SQL file | Result files |
 | --- | --- | --- |
-| Q1. Flight activity and points by tier | `script/04_analysis/q1_flight_activity_by_tier.sql` | `results/q1_flight_by_tier.csv` |
-| Q2. Churn by tier, enrolment, cohort, province | `script/04_analysis/q2_churn_rates.sql` | `results/q2_churn_*.csv` |
-| Q3. Drivers of CLV | `script/04_analysis/q3_clv_drivers.sql` | `results/q3_clv_*.csv` |
-| Q4. Points earned and redeemed | `script/04_analysis/q4_points_redemption.sql` | `results/q4_points.csv` |
-| Q5. Activity before cancellation | `script/04_analysis/q5_activity_before_cancellation.sql` | `results/q5_pre_cancel.csv`, `results/q5_baseline.csv` |
-| Q6. 2018 promotion vs standard | `script/04_analysis/q6_promotion_vs_standard.sql` | `results/q6_promotion_*.csv` |
-| Q7. Value concentration | `script/04_analysis/q7_value_concentration.sql` | `results/q7_concentration.csv` |
+| Q1. Flight activity and points by tier | [SQL](script/04_analysis/q1_flight_activity_by_tier.sql) | [Result](results/q1_flight_by_tier.csv) |
+| Q2. Churn by tier, enrolment, cohort and province | [SQL](script/04_analysis/q2_churn_rates.sql) | [Card](results/q2_churn_card.csv) · [Cohort](results/q2_churn_cohort.csv) · [Enrolment](results/q2_churn_enrollment.csv) · [Province](results/q2_churn_province.csv) |
+| Q3. Drivers of CLV | [SQL](script/04_analysis/q3_clv_drivers.sql) | [Card](results/q3_clv_card.csv) · [Education](results/q3_clv_education.csv) · [Salary](results/q3_clv_salary.csv) |
+| Q4. Points earned and redeemed | [SQL](script/04_analysis/q4_points_redemption.sql) | [Result](results/q4_points.csv) |
+| Q5. Activity before cancellation | [SQL](script/04_analysis/q5_activity_before_cancellation.sql) | [Pre-cancellation](results/q5_pre_cancel.csv) · [Baseline](results/q5_baseline.csv) |
+| Q6. 2018 promotion vs standard | [SQL](script/04_analysis/q6_promotion_vs_standard.sql) | [Promotion A](results/q6_promotion_a.csv) · [Promotion B](results/q6_promotion_b.csv) |
+| Q7. Value concentration | [SQL](script/04_analysis/q7_value_concentration.sql) | [Result](results/q7_concentration.csv) |
 
 ## Documentation
 
@@ -148,4 +151,4 @@ airline-loyalty-program-sql/
 
 ## Author
 
-[Sarthak Jaykar](https://www.linkedin.com/in/sarthak-jaykar/)
+[Sarthak Jaykar](https://www.linkedin.com/in/sarthak-jaykar/) · [GitHub](https://github.com/sarthak-jaykar)
