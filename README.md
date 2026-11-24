@@ -103,16 +103,15 @@ airline-loyalty-program-eda-sql/
 │   ├── 01_business_brief.md           Context, stakeholders, decisions, questions
 │   ├── 02_data_and_quality.md         Source, tables, quality decisions, checks
 │   ├── 03_findings_and_recommendations.md  KPI definitions, findings, actions
-│   ├── how_to_run.txt                 Step-by-step pgAdmin guide (Windows)
+│   └── how_to_run.txt                 Step-by-step pgAdmin guide (Windows)
 ├── results/                           Query outputs exported from PostgreSQL
 ├── screenshots/                       pgAdmin screenshots of the database and each question
 └── script/
+    ├── README.md                      Script execution order and file guide
     ├── 00_setup/                      Schemas and raw tables
     ├── 01_load/                       Load the three CSV files
     ├── 02_validation/                 Duplicates, keys, orphans, business rules, and a Python cross-check
     ├── 03_views/                      Clean flight view (with membership flag) and member view
-    ├── README.md                      Project overview and results index
-    ├── README.md                      Script execution order and file guide
     └── 04_analysis/                   One file per business question (Q1 to Q7)
 ```
 
